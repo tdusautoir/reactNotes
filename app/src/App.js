@@ -2,6 +2,7 @@ import { Side, Main, NoteList } from "./App.styled";
 import { lightTheme, darkTheme, GlobalStyle } from "./GlobalStyle";
 import Note from "./Components/Note";
 import NoteLink from "./Components/NoteLink";
+import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { useEffect, useState } from "react";
 
@@ -35,7 +36,10 @@ function App() {
           )}
         </Side>
         <Main>
-          <Note></Note>
+          <Routes>
+            <Route path="/" element={<div>Sélectionnez une note pour l'editez</div>}></Route>
+            <Route path="/notes/:id" element={<Note />}></Route>
+          </Routes>
         </Main>
       </ThemeProvider>
     </>
