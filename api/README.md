@@ -1,4 +1,4 @@
-Initialise db.json :
+Initialise `db.json` :
 
 ```
 {
