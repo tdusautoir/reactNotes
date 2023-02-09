@@ -20,10 +20,6 @@ export const Title = styled.input`
     &:focus-visible {
         outline: none;
     }
-
-    /* &::placeholder {
-        color: ${({ theme }) => theme.placeholderColor};
-    } */
 `;
 
 export const Content = styled.textarea`
@@ -38,8 +34,23 @@ export const Content = styled.textarea`
     &:focus-visible {
         outline: none;
     }
+`;
 
-    /* &::placeholder {
-        color: ${({ theme }) => theme.placeholderColor};
-    } */
+export const DeleteButton = styled.button`
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 20px;
+    background-color: ${({ theme }) => theme.asideBackgroundColor };
+    color: inherit;
+    border-radius: 25px;
+    border: 1px solid #454545;
+    cursor: pointer;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
 `;

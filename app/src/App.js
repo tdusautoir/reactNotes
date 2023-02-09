@@ -1,4 +1,4 @@
-import { Side, Main, NoteList } from "./App.styled";
+import { Side, Main, NoteList, Loading } from "./App.styled";
 import { darkTheme, GlobalStyle } from "./GlobalStyle";
 import Note from "./Components/Note";
 import NoteLink from "./Components/NoteLink";
@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [notes, setNotes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const getNotes = async () => {
@@ -15,30 +16,34 @@ function App() {
     const notes = await response.json();
 
     setNotes(notes);
+    setIsLoading(false);
   };
 
-  const deleteNote = (id) => {
-    console.log("note" + id);
+  const deleteNote = async (id) => {
+    await fetch(`/notes/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    setNotes(notes.filter((note) => note.id !== parseInt(id)));
+    navigate("/");
+  };
+
+  const addNote = (note) => {
+    setNotes([...notes, note]);
+    navigate(`/notes/${note.id}`);
   }
-
-  const updateNote = (updatedNote) => {
-    setNotes(notes.map((note) => {
-      if (note.id === updatedNote.id) {
-        return updatedNote;
-      } else {
-        return note;
-      }
-    }));
-
-    const delay = setTimeout(async () => {
-      await fetch(`/notes/${updatedNote.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedNote),
-      });
-    }, 500);
-
-    return () => clearTimeout(delay);
+  
+  const updatedNote = (updatedNote) => {
+    setNotes(
+      notes.map((note) => {
+          if (note.id === updatedNote.id) {
+            return updatedNote;
+          } else {
+            return note;
+          }
+      })
+    );
   }
 
   useEffect(() => {
@@ -50,20 +55,35 @@ function App() {
       <ThemeProvider theme={darkTheme}>
         <GlobalStyle />
         <Side>
-          {notes && (
-            <NoteList>
-              {notes.map((note) => (
-                <li key={note.id}>
-                  <NoteLink id={note.id} title={note.title} content={note.content} />
-                </li>
-              ))}
-            </NoteList>
+          {!isLoading ? (
+            notes && (
+              <NoteList>
+                {notes.map((note) => (
+                  <li key={note.id}>
+                    <NoteLink
+                      id={note.id}
+                      title={note.title ? note.title : "Title"}
+                      content={note.content ? note.content : "content"}
+                      load
+                    />
+                  </li>
+                ))}
+              </NoteList>
+            )
+          ) : (
+            <Loading />
           )}
         </Side>
         <Main>
           <Routes>
-            <Route path="/" element={<div>Sélectionnez une note pour l'editez</div>}></Route>
-            <Route path="/notes/:id" element={<Note onDelete={deleteNote} onChange={updateNote} />}></Route>
+              <Route
+                path="/"
+                element={!isLoading && <Note onDelete={deleteNote} onChange={updatedNote} onAdd={addNote}/>}
+              ></Route>
+            <Route
+              path="/notes/:id"
+              element={<Note onDelete={deleteNote} onChange={updatedNote} onAdd={addNote}/>}
+            ></Route>
           </Routes>
         </Main>
       </ThemeProvider>

@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Link as _Link } from "react-router-dom";
+import { BiLoaderAlt} from "react-icons/bi";
+
 
 export const Link = styled(_Link)`
     display: block;
@@ -24,5 +26,23 @@ export const Link = styled(_Link)`
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+    }
+`;
+
+export const LoadingNote = styled(BiLoaderAlt)`
+    position: absolute;
+    right: 0;
+    margin: 10px;
+    width: 26px;
+    height: 26px;
+    animation: loadingNote 2s linear infinite;
+
+    @keyframes loadingNote {
+        from{
+            transform: rotate(0deg);
+        }
+        to{
+            transform: rotate(360deg);
+        }
     }
 `;
