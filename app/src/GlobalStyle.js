@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
     * {
@@ -18,15 +18,15 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 export const darkTheme = {
-    mainBackgroundColor: "#232527",
-    asideBackgroundColor: "#1f2123",
-    mainTextColor: "white",
-    // placeholderColor: "#ffffff4d",
-}
+  mainBackgroundColor: "#232527",
+  asideBackgroundColor: "#1f2123",
+  mainTextColor: "white",
+  // placeholderColor: "#ffffff4d",
+};
 
 export const lightTheme = {
-    mainBackgroundColor: "#f6f6f6",
-    asideBackgroundColor: "#e2e2e2",
-    mainTextColor: "black",
-    // placeholderColor: "#ffffff4d",
-}
+  mainBackgroundColor: "#f6f6f6",
+  asideBackgroundColor: "#e2e2e2",
+  mainTextColor: "black",
+  // placeholderColor: "#ffffff4d",
+};
