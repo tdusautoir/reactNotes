@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { Link as _Link } from "react-router-dom";
 import { BiLoaderAlt} from "react-icons/bi";
 
-
 export const Link = styled(_Link)`
     display: block;
     padding: 12px;
@@ -13,9 +12,18 @@ export const Link = styled(_Link)`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border-radius: 5px;
 
     &:hover {
         filter: brightness(1.4);
+    }
+
+    &.active {
+        filter: brightness(1.4);
+    }
+
+    &.pinned {
+        border: 1px solid #454545;
     }
 
     p {

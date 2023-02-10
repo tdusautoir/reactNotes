@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { BiLoaderAlt} from "react-icons/bi";
 
-const SIDE_WIDTH = 240;
+const SIDE_WIDTH = 280;
 
 export const Side = styled.aside`
     position: fixed;
@@ -11,6 +11,8 @@ export const Side = styled.aside`
     bottom: 0;
     background-color: ${({ theme }) => theme.asideBackgroundColor};
     border-right: 1px solid #454545;
+    padding: 12px;
+    overflow-y: auto;
 `;
  
 export const Main = styled.main`
@@ -22,6 +24,21 @@ export const NoteList = styled.ul`
     margin: unset;
     padding: unset;
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+`;
+
+export const SideTitle = styled.h2`
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.8;
+    font-weight: 500;
+    font-size: 16px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #454545;
+    margin: 20px 10px 10px 10px;
 `;
 
 export const Loading = styled(BiLoaderAlt)`
@@ -40,5 +57,20 @@ export const Loading = styled(BiLoaderAlt)`
         to{
             transform: translate(-50%, -50%) rotate(360deg);
         }
+    }
+`;
+
+export const SearchInput = styled.input`
+    border: 1px solid #454545;
+    width: 100%;
+    border-radius: 100px;
+    padding: 8px 15px;
+    background: transparent;
+    color: inherit;
+    filter: brightness(1.6);
+
+    &:focus-visible {
+        outline: none;
+        filter: brightness(2);
     }
 `;

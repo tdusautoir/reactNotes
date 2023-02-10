@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { LoadingNote } from "./NoteLink.styled";
-import { Form, Title, Content, DeleteButton } from "./Note.styled";
+import { Form, Title, Content, DeleteButton, Buttons } from "./Note.styled";
 import { MdDelete } from "react-icons/md";
+import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai";
 import Modal from "./Modal";
 
-const Note = ({ onDelete, onChange, onAdd }) => {
+const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
   const { id } = useParams();
   const [note, setNote] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,9 +93,14 @@ const Note = ({ onDelete, onChange, onAdd }) => {
             />
             {status === 'delete' && <Modal changeStatus={setStatus} onConfirmed={() => onDelete(id)}/>}
             {id && (
-              <DeleteButton onClick={() => setStatus("delete")}>
-                <MdDelete />
-              </DeleteButton>
+              <Buttons>
+                <DeleteButton onClick={() => { onPinned(note); note.pinned ? setNote({...note, pinned: false}) : setNote({...note, pinned: true}) }}>
+                  {note.pinned ? ( <AiOutlinePushpin /> ) : ( <AiFillPushpin /> )}
+                </DeleteButton>
+                <DeleteButton onClick={() => setStatus("delete")}>
+                  <MdDelete />
+                </DeleteButton>
+              </Buttons>
             )}
           </>
         ) : (

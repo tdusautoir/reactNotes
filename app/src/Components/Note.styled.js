@@ -39,18 +39,33 @@ export const Content = styled.textarea`
 export const DeleteButton = styled.button`
     width: 50px;
     height: 50px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin: 20px;
-    background-color: ${({ theme }) => theme.asideBackgroundColor };
     color: inherit;
-    border-radius: 25px;
-    border: 1px solid #454545;
+    border: none;
     cursor: pointer;
+    background: transparent;
+    padding: 0;
 
     svg {
         width: 20px;
         height: 20px;
     }
 `;
+
+export const Buttons = styled.div`
+    height: 50px;
+    margin: 20px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-radius: 25px;
+    border: 1px solid #454545;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${({ theme }) => theme.asideBackgroundColor };
+
+    button:first-child {
+        border-right: 1px solid #454545;
+    }
+`;
+

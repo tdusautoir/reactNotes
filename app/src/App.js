@@ -1,14 +1,17 @@
-import { Side, Main, NoteList, Loading } from "./App.styled";
+import { Side, Main, NoteList, Loading, SideTitle, SearchInput } from "./App.styled";
 import { darkTheme, GlobalStyle } from "./GlobalStyle";
 import Note from "./Components/Note";
 import NoteLink from "./Components/NoteLink";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { useEffect, useState } from "react";
+import { AiFillPushpin } from "react-icons/ai";
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedNote, setSelectedNote] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const getNotes = async () => {
@@ -29,8 +32,46 @@ function App() {
     navigate("/");
   };
 
+  const pinnedNote = async (pinnedNote) => {
+    const pinned = pinnedNote.pinned ? false : true;
+    const response = await fetch(`/notes/${pinnedNote.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pinned: pinned }),
+    });
+
+    const updatedNote = await response.json();
+
+    setNotes(notes.map((note) => {
+      if (note.id === parseInt(pinnedNote.id)) {
+        return updatedNote;
+      } else {
+        return note;
+      }
+    }));
+  };
+
+  const doesNotMatchSearchTerm = (note) => {
+    if(note.title) {
+      if(note.title.includes(searchTerm)) {
+        return true;
+      } else if(note.content) {
+        if(note.content.includes(searchTerm)) {
+          return true;
+        }
+      }
+    } else if(note.content) {
+      if(note.content.includes(searchTerm)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   const addNote = (note) => {
     setNotes([...notes, note]);
+    setSelectedNote(note.id);
     navigate(`/notes/${note.id}`);
   }
   
@@ -56,20 +97,43 @@ function App() {
         <GlobalStyle />
         <Side>
           {!isLoading ? (
-            notes && (
-              <NoteList>
-                {notes.map((note) => (
-                  <li key={note.id}>
-                    <NoteLink
-                      id={note.id}
-                      title={note.title ? note.title : "Title"}
-                      content={note.content ? note.content : "content"}
-                      load
-                    />
-                  </li>
-                ))}
-              </NoteList>
-            )
+            <>
+              <SearchInput type="search" onChange={(e) => setSearchTerm(e.target.value)}/>
+              <SideTitle><AiFillPushpin/>Pinned</SideTitle>
+                { notes && (
+                  <NoteList>
+                    {notes.filter((note) => doesNotMatchSearchTerm(note)).map((note) => note.pinned && (
+                      <li key={note.id}>
+                        <NoteLink
+                          pinned={note.pinned}
+                          active={parseInt(note.id) === selectedNote}
+                          id={note.id}
+                          title={note.title ? note.title : "Title"}
+                          content={note.content ? note.content : "content"}
+                          onSelect={setSelectedNote}
+                        />
+                      </li>
+                    ))}
+                  </NoteList>
+                )}
+              <SideTitle>Notes</SideTitle>
+              { notes && (
+                <NoteList>
+                  {notes.filter((note) => doesNotMatchSearchTerm(note)).map((note) => !note.pinned && (
+                    <li key={note.id}>
+                      <NoteLink
+                        pinned={note.pinned}
+                        active={parseInt(note.id) === selectedNote}
+                        id={note.id}
+                        title={note.title ? note.title : "Title"}
+                        content={note.content ? note.content : "content"}
+                        onSelect={setSelectedNote}
+                      />
+                    </li>
+                  ))}
+                </NoteList>
+              )}
+            </>
           ) : (
             <Loading />
           )}
@@ -78,11 +142,11 @@ function App() {
           <Routes>
               <Route
                 path="/"
-                element={!isLoading && <Note onDelete={deleteNote} onChange={updatedNote} onAdd={addNote}/>}
+                element={!isLoading && <Note onDelete={deleteNote} onChange={updatedNote} onAdd={addNote} onPinned={pinnedNote}/>}
               ></Route>
             <Route
               path="/notes/:id"
-              element={<Note onDelete={deleteNote} onChange={updatedNote} onAdd={addNote}/>}
+              element={<Note onDelete={deleteNote} onChange={updatedNote} onAdd={addNote} onPinned={pinnedNote}/>}
             ></Route>
           </Routes>
         </Main>

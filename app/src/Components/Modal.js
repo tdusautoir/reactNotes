@@ -4,7 +4,7 @@ const Modal = ({ onConfirmed, changeStatus }) => {
   return (
     <ModalContainer>
       <div className="modal__container">
-        <p>Etes vous sur de faire un gros prout ??? ?</p>
+        <p>Are you sure you want to delete ?</p>
         <button onClick={() => { onConfirmed(); changeStatus('update'); }}>Oui</button>
         <button onClick={() => { changeStatus('update'); }}>Non</button>
       </div>
