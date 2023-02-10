@@ -68,4 +68,3 @@ export const Buttons = styled.div`
         border-right: 1px solid ${({ theme }) => theme.borderColor};;
     }
 `;
-

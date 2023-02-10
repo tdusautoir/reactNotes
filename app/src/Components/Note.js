@@ -5,6 +5,7 @@ import { Form, Title, Content, DeleteButton, Buttons } from "./Note.styled";
 import { MdDelete } from "react-icons/md";
 import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai";
 import Modal from "./Modal";
+import Tags from "./NoteTags";
 
 const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
   const { id } = useParams();
@@ -86,6 +87,7 @@ const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
       <Form onSubmit={(event) => event.preventDefault()}>
         {!isLoading ? (
           <>
+            { note && note.tagsId && ( <Tags tagsId={note.tagsId} /> )} 
             <Title
               placeholder="Type your title here..."
               type="text"

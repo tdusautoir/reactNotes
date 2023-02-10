@@ -30,7 +30,7 @@ export const darkTheme = {
 export const lightTheme = {
   mainBackgroundColor: "#f6f6f6",
   asideBackgroundColor: "#e2e2e2",
-  mainTextColor: "black",
+  mainTextColor: "#343434",
   borderColor: "#b9b9b9",
   hoverColor: "#d2d2d2",
 };
