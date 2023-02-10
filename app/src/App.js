@@ -1,7 +1,8 @@
-import { Side, Main, NoteList, Loading, SideTitle, SearchInput } from "./App.styled";
-import { darkTheme, GlobalStyle } from "./GlobalStyle";
+import { Side, Main, NoteList, Loading, SideTitle } from "./App.styled";
+import { darkTheme, GlobalStyle, lightTheme } from "./GlobalStyle";
 import Note from "./Components/Note";
 import NoteLink from "./Components/NoteLink";
+import SideNav from "./Components/SideNav";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedNote, setSelectedNote] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [theme, setTheme] = useState('darkTheme');
   const navigate = useNavigate();
 
   const getNotes = async () => {
@@ -51,7 +53,7 @@ function App() {
     }));
   };
 
-  const doesNotMatchSearchTerm = (note) => {
+  const matchSearchTerm = (note) => {
     if(note.title) {
       if(note.title.includes(searchTerm)) {
         return true;
@@ -93,16 +95,16 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={theme === 'darkTheme' ? darkTheme : lightTheme}>
         <GlobalStyle />
         <Side>
           {!isLoading ? (
             <>
-              <SearchInput type="search" onChange={(e) => setSearchTerm(e.target.value)}/>
+              <SideNav onNavigate={navigate} onToggleTheme={() => setTheme(theme === 'darkTheme' ? 'lightTheme' : 'darkTheme')} onSearch={setSearchTerm} />
               <SideTitle><AiFillPushpin/>Pinned</SideTitle>
                 { notes && (
                   <NoteList>
-                    {notes.filter((note) => doesNotMatchSearchTerm(note)).map((note) => note.pinned && (
+                    {notes.filter((note) => matchSearchTerm(note)).map((note) => note.pinned && (
                       <li key={note.id}>
                         <NoteLink
                           pinned={note.pinned}
@@ -119,7 +121,7 @@ function App() {
               <SideTitle>Notes</SideTitle>
               { notes && (
                 <NoteList>
-                  {notes.filter((note) => doesNotMatchSearchTerm(note)).map((note) => !note.pinned && (
+                  {notes.filter((note) => matchSearchTerm(note)).map((note) => !note.pinned && (
                     <li key={note.id}>
                       <NoteLink
                         pinned={note.pinned}

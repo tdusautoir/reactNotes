@@ -14,7 +14,7 @@ export const Title = styled.input`
     border: none;
     font-size: 26px;
     font-weight: 500;
-    color: inherit;
+    color: ${({ theme }) => theme.mainTextColor };
     padding: ${INPUT_PADDING}px ${INPUT_PADDING}px 8px ${INPUT_PADDING}px;
 
     &:focus-visible {
@@ -26,7 +26,7 @@ export const Content = styled.textarea`
     flex: 1;
     background: transparent;
     border: none;
-    color: inherit;
+    color: ${({ theme }) => theme.mainTextColor };
     font-family: inherit;
     padding: ${INPUT_PADDING}px;
     font-size: 18px;
@@ -39,7 +39,7 @@ export const Content = styled.textarea`
 export const DeleteButton = styled.button`
     width: 50px;
     height: 50px;
-    color: inherit;
+    color: ${({ theme }) => theme.mainTextColor };
     border: none;
     cursor: pointer;
     background: transparent;
@@ -58,14 +58,14 @@ export const Buttons = styled.div`
     bottom: 0;
     right: 0;
     border-radius: 25px;
-    border: 1px solid #454545;
+    border: 1px solid ${({ theme }) => theme.borderColor};;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: ${({ theme }) => theme.asideBackgroundColor };
 
     button:first-child {
-        border-right: 1px solid #454545;
+        border-right: 1px solid ${({ theme }) => theme.borderColor};;
     }
 `;
 

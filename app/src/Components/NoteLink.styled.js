@@ -7,7 +7,7 @@ export const Link = styled(_Link)`
     padding: 12px;
     font-weight: bold;
     text-decoration: none;
-    color: inherit;
+    color: ${({ theme }) => theme.mainTextColor };
     background-color: ${({ theme }) => theme.asideBackgroundColor};
     overflow: hidden;
     white-space: nowrap;
@@ -15,15 +15,15 @@ export const Link = styled(_Link)`
     border-radius: 5px;
 
     &:hover {
-        filter: brightness(1.4);
+        background-color: ${({ theme }) => theme.hoverColor};
     }
 
     &.active {
-        filter: brightness(1.4);
+        background-color: ${({ theme }) => theme.hoverColor};
     }
 
     &.pinned {
-        border: 1px solid #454545;
+        border: 1px solid ${({ theme }) => theme.borderColor};;
     }
 
     p {

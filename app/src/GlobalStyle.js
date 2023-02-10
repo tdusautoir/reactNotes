@@ -3,6 +3,8 @@ import { createGlobalStyle } from "styled-components";
 export const GlobalStyle = createGlobalStyle`
     * {
         box-sizing: border-box;
+        color: ${({theme}) => theme.mainTextColor};
+        transition: 300ms;
     }
 
     body {
@@ -21,12 +23,14 @@ export const darkTheme = {
   mainBackgroundColor: "#232527",
   asideBackgroundColor: "#1f2123",
   mainTextColor: "white",
-  // placeholderColor: "#ffffff4d",
+  borderColor: "#454545",
+  hoverColor: "#2d2e2f",
 };
 
 export const lightTheme = {
   mainBackgroundColor: "#f6f6f6",
   asideBackgroundColor: "#e2e2e2",
   mainTextColor: "black",
-  // placeholderColor: "#ffffff4d",
+  borderColor: "#b9b9b9",
+  hoverColor: "#d2d2d2",
 };

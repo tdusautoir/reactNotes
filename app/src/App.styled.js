@@ -10,7 +10,7 @@ export const Side = styled.aside`
     left: 0;
     bottom: 0;
     background-color: ${({ theme }) => theme.asideBackgroundColor};
-    border-right: 1px solid #454545;
+    border-right: 1px solid ${({ theme }) => theme.borderColor};;
     padding: 12px;
     overflow-y: auto;
 `;
@@ -37,7 +37,7 @@ export const SideTitle = styled.h2`
     font-weight: 500;
     font-size: 16px;
     padding-bottom: 2px;
-    border-bottom: 1px solid #454545;
+    border-bottom: 1px solid ${({ theme }) => theme.borderColor};;
     margin: 20px 10px 10px 10px;
 `;
 
@@ -57,20 +57,5 @@ export const Loading = styled(BiLoaderAlt)`
         to{
             transform: translate(-50%, -50%) rotate(360deg);
         }
-    }
-`;
-
-export const SearchInput = styled.input`
-    border: 1px solid #454545;
-    width: 100%;
-    border-radius: 100px;
-    padding: 8px 15px;
-    background: transparent;
-    color: inherit;
-    filter: brightness(1.6);
-
-    &:focus-visible {
-        outline: none;
-        filter: brightness(2);
     }
 `;

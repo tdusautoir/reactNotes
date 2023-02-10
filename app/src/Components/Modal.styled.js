@@ -13,27 +13,34 @@ export const ModalContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  .modal__container {
+  & > div {
     background-color: ${({theme}) => theme.asideBackgroundColor};
     width: 320px;
     height: fit-content;
     border-radius: 10px;
-    padding: 20px;
     display: flex;
     gap: 20px;
     flex-direction: column;
     text-align: center;
+    padding: 20px;
 
     p {
+      margin: 0;
       font-size: 1rem;
-      color: inherit
+      color: ${({theme}) => theme.asideBackgroundColor};
     }
+  }
+`;
 
-    .buttons {
-      display: flex;
-      flex-direction: row;
-      gap: 20px;
-      justify-content: center;
-    }
+export const ModalButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+
+  button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
   }
 `;

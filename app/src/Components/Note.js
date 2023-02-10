@@ -54,6 +54,12 @@ const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
   };
 
   useEffect(() => {
+    if(id === undefined) {
+      setNote(null)
+    }
+  }, [id])
+
+  useEffect(() => {
     getNote();
   }, [getNote]);
 
@@ -95,7 +101,7 @@ const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
             {id && (
               <Buttons>
                 <DeleteButton onClick={() => { onPinned(note); note.pinned ? setNote({...note, pinned: false}) : setNote({...note, pinned: true}) }}>
-                  {note.pinned ? ( <AiOutlinePushpin /> ) : ( <AiFillPushpin /> )}
+                  {note ? !note.pinned ? ( <AiOutlinePushpin /> ) : ( <AiFillPushpin /> ) : null}
                 </DeleteButton>
                 <DeleteButton onClick={() => setStatus("delete")}>
                   <MdDelete />
