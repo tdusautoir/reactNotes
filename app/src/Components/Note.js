@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { LoadingNote } from "./NoteLink.styled";
 import { Form, Title, Content, DeleteButton, Buttons } from "./Note.styled";
 import { MdDelete } from "react-icons/md";
@@ -11,17 +11,24 @@ const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
   const { id } = useParams();
   const [note, setNote] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   const [status, setStatus] = useState("add");
 
   const getNote = useCallback(async () => {
     if (id) {
         setIsLoading(true);
         const response = await fetch(`/notes/${id}`);
-        const note = await response.json();
-
-        setNote(note);
-        setStatus("update");
-        setIsLoading(false);
+        
+        if(response.status === 200) {
+          const note = await response.json();
+  
+          setNote(note);
+          setStatus("update");
+          setIsLoading(false);
+        } else {
+          //note not found
+          navigate('/');
+        }
     } else {
         setIsLoading(false);
     }

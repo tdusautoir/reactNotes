@@ -4,19 +4,35 @@ Initialise `db.json` :
 {
   "notes": [
     {
-      "id" : 1,
       "title": "Initiation à React",
-      "content": "Lorem ipsum..."
+      "content": "Contenuueeeee",
+      "id": 1,
+      "pinned": false,
+      "tagsId": [
+        1
+      ]
     },
     {
-      "id" : 2,
-      "title": "Utilisation de json-server",
-      "content": "Contenue..."
+      "title": "Initiation à React 2",
+      "content": "Contenuueeee 2",
+      "id": 2,
+      "pinned": true,
+      "tagsId": []
     }
   ],
-  "profile": {
+   "profile": {
     "name": "Thibaut"
-  }
+  },
+  "tags": [
+    {
+      "name": "premier tag",
+      "id": 1
+    },
+    {
+      "name": "deuxieme tag",
+      "id": 2
+    }
+  ]
 }
 ```
 

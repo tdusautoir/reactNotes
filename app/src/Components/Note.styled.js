@@ -30,6 +30,7 @@ export const Content = styled.textarea`
     font-family: inherit;
     padding: ${INPUT_PADDING}px;
     font-size: 18px;
+    resize: none;
 
     &:focus-visible {
         outline: none;

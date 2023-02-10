@@ -30,7 +30,7 @@ export const Tags = styled.div`
             font-size: 16px;
         }
 
-        input {
+        select {
             background-color: transparent;
             border: none;
             height: 100%;

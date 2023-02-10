@@ -13,7 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedNote, setSelectedNote] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
-  const [theme, setTheme] = useState('darkTheme');
+  const [theme, setTheme] = useState(darkTheme);
   const navigate = useNavigate();
 
   const getNotes = async () => {
@@ -44,50 +44,38 @@ function App() {
 
     const updatedNote = await response.json();
 
-    setNotes(notes.map((note) => {
-      if (note.id === parseInt(pinnedNote.id)) {
-        return updatedNote;
-      } else {
-        return note;
-      }
-    }));
+    setNotes(
+      notes.map((note) => {
+        if (note.id === parseInt(pinnedNote.id)) {
+          return updatedNote;
+        } else {
+          return note;
+        }
+      })
+    );
   };
 
   const matchSearchTerm = (note) => {
-    if(note.title) {
-      if(note.title.includes(searchTerm)) {
-        return true;
-      } else if(note.content) {
-        if(note.content.includes(searchTerm)) {
-          return true;
-        }
-      }
-    } else if(note.content) {
-      if(note.content.includes(searchTerm)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
+    return (note.title ? note.title : "").includes(searchTerm) || (note.content ? note.content : "").includes(searchTerm);
+  };
 
   const addNote = (note) => {
     setNotes([...notes, note]);
     setSelectedNote(note.id);
     navigate(`/notes/${note.id}`);
-  }
-  
+  };
+
   const updatedNote = (updatedNote) => {
     setNotes(
       notes.map((note) => {
-          if (note.id === updatedNote.id) {
-            return updatedNote;
-          } else {
-            return note;
-          }
+        if (note.id === updatedNote.id) {
+          return updatedNote;
+        } else {
+          return note;
+        }
       })
     );
-  }
+  };
 
   useEffect(() => {
     getNotes();
@@ -95,44 +83,63 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={theme === 'darkTheme' ? darkTheme : lightTheme}>
+      <ThemeProvider theme={theme}>
         <GlobalStyle />
         <Side>
           {!isLoading ? (
             <>
-              <SideNav onNavigate={navigate} onToggleTheme={() => setTheme(theme === 'darkTheme' ? 'lightTheme' : 'darkTheme')} onSearch={setSearchTerm} />
-              <SideTitle><AiFillPushpin/>Pinned</SideTitle>
-                { notes && (
-                  <NoteList>
-                    {notes.filter((note) => matchSearchTerm(note)).map((note) => note.pinned && (
-                      <li key={note.id}>
-                        <NoteLink
-                          pinned={note.pinned}
-                          active={parseInt(note.id) === selectedNote}
-                          id={note.id}
-                          title={note.title ? note.title : "Title"}
-                          content={note.content ? note.content : "content"}
-                          onSelect={setSelectedNote}
-                        />
-                      </li>
-                    ))}
-                  </NoteList>
-                )}
-              <SideTitle>Notes</SideTitle>
-              { notes && (
+              <SideNav
+                onNavigate={navigate}
+                onToggleTheme={() =>
+                  setTheme(theme === darkTheme ? lightTheme : darkTheme)
+                }
+                onSearch={setSearchTerm}
+              />
+              <SideTitle>
+                <AiFillPushpin />
+                Pinned
+              </SideTitle>
+              {notes && (
                 <NoteList>
-                  {notes.filter((note) => matchSearchTerm(note)).map((note) => !note.pinned && (
-                    <li key={note.id}>
-                      <NoteLink
-                        pinned={note.pinned}
-                        active={parseInt(note.id) === selectedNote}
-                        id={note.id}
-                        title={note.title ? note.title : "Title"}
-                        content={note.content ? note.content : "content"}
-                        onSelect={setSelectedNote}
-                      />
-                    </li>
-                  ))}
+                  {notes
+                    .filter((note) => matchSearchTerm(note))
+                    .map(
+                      (note) =>
+                        note.pinned && (
+                          <li key={note.id}>
+                            <NoteLink
+                              pinned={note.pinned}
+                              active={parseInt(note.id) === selectedNote}
+                              id={note.id}
+                              title={note.title ? note.title : "Title"}
+                              content={note.content ? note.content : "content"}
+                              onSelect={setSelectedNote}
+                            />
+                          </li>
+                        )
+                    )}
+                </NoteList>
+              )}
+              <SideTitle>Notes</SideTitle>
+              {notes && (
+                <NoteList>
+                  {notes
+                    .filter((note) => matchSearchTerm(note))
+                    .map(
+                      (note) =>
+                        !note.pinned && (
+                          <li key={note.id}>
+                            <NoteLink
+                              pinned={note.pinned}
+                              active={parseInt(note.id) === selectedNote}
+                              id={note.id}
+                              title={note.title ? note.title : "Title"}
+                              content={note.content ? note.content : "content"}
+                              onSelect={setSelectedNote}
+                            />
+                          </li>
+                        )
+                    )}
                 </NoteList>
               )}
             </>
@@ -142,13 +149,29 @@ function App() {
         </Side>
         <Main>
           <Routes>
-              <Route
-                path="/"
-                element={!isLoading && <Note onDelete={deleteNote} onChange={updatedNote} onAdd={addNote} onPinned={pinnedNote}/>}
-              ></Route>
+            <Route
+              path="*"
+              element={
+                !isLoading && (
+                  <Note
+                    onDelete={deleteNote}
+                    onChange={updatedNote}
+                    onAdd={addNote}
+                    onPinned={pinnedNote}
+                  />
+                )
+              }
+            ></Route>
             <Route
               path="/notes/:id"
-              element={<Note onDelete={deleteNote} onChange={updatedNote} onAdd={addNote} onPinned={pinnedNote}/>}
+              element={
+                <Note
+                  onDelete={deleteNote}
+                  onChange={updatedNote}
+                  onAdd={addNote}
+                  onPinned={pinnedNote}
+                />
+              }
             ></Route>
           </Routes>
         </Main>
