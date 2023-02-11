@@ -54,12 +54,26 @@ const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
     const response = await fetch("/notes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(note),
+      body: JSON.stringify({...note, tagsId: []}),
     });
 
     const newNote = await response.json();
     onAdd(newNote);
   };
+
+  const addTag = async (tagId) => {
+    if(!note.tagsId.includes(tagId)) {
+      const response = await fetch(`/notes/${note.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({...note, tagsId: [...note.tagsId, tagId]}),
+      });
+  
+      if(response.status === 200) {
+        setNote({...note, tagsId: [...note.tagsId, tagId]});
+      }
+    }
+  }
 
   useEffect(() => {
     if(id === undefined) {
@@ -94,7 +108,7 @@ const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
       <Form onSubmit={(event) => event.preventDefault()}>
         {!isLoading ? (
           <>
-            { note && note.tagsId && ( <Tags tagsId={note.tagsId} /> )} 
+            { note && note.tagsId && ( <Tags tagsId={note.tagsId} onAdd={addTag} /> )} 
             <Title
               placeholder="Type your title here..."
               type="text"

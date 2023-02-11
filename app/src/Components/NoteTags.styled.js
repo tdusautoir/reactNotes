@@ -31,6 +31,7 @@ export const Tags = styled.div`
         }
 
         select {
+            padding: 8px 10px;
             background-color: transparent;
             border: none;
             height: 100%;
