@@ -5,7 +5,7 @@ import NoteLink from "./Components/NoteLink";
 import SideNav from "./Components/SideNav";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AiFillPushpin } from "react-icons/ai";
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
       headers: { "Content-Type": "application/json" },
     });
 
-    setNotes(notes.filter((note) => note.id !== parseInt(id)));
+    setNotes((oldNotes) => { return oldNotes.filter((note) => parseInt(note.id) !== parseInt(id))});
     navigate("/");
   };
 
@@ -44,38 +44,43 @@ function App() {
 
     const updatedNote = await response.json();
 
-    setNotes(
-      notes.map((note) => {
+    setNotes((oldNotes) => {
+      return oldNotes.map((note) => {
         if (note.id === parseInt(pinnedNote.id)) {
           return updatedNote;
         } else {
           return note;
         }
-      })
-    );
+      });
+    });
   };
 
   const matchSearchTerm = (note) => {
-    return (note.title ? note.title : "").includes(searchTerm) || (note.content ? note.content : "").includes(searchTerm);
-  };
-
-  const addNote = (note) => {
-    setNotes([...notes, note]);
-    setSelectedNote(note.id);
-    navigate(`/notes/${note.id}`);
-  };
-
-  const updatedNote = (updatedNote) => {
-    setNotes(
-      notes.map((note) => {
-        if (note.id === updatedNote.id) {
-          return updatedNote;
-        } else {
-          return note;
-        }
-      })
+    return (
+      (note.title ? note.title : "").includes(searchTerm) ||
+      (note.content ? note.content : "").includes(searchTerm)
     );
   };
+
+  const addNote = useCallback((note) => {
+    setNotes((oldNotes) => { return [...oldNotes, note] });
+    setSelectedNote(note.id);
+    navigate(`/notes/${note.id}`);
+  }, [navigate]);
+
+  const updatedNote = useCallback((updatedNote) => {
+    if(updatedNote) {
+      setNotes((oldNotes) => {
+        return oldNotes.map((note) => {
+          if (note.id === updatedNote.id) {
+            return updatedNote;
+          } else {
+            return note;
+          }
+        });
+      })
+    }
+  }, []);
 
   useEffect(() => {
     getNotes();
@@ -91,7 +96,7 @@ function App() {
               <SideNav
                 onNavigate={navigate}
                 onToggleTheme={() =>
-                  setTheme(theme === darkTheme ? lightTheme : darkTheme)
+                  setTheme((oldTheme) => { return oldTheme === darkTheme ? lightTheme : darkTheme })
                 }
                 onSearch={setSearchTerm}
               />

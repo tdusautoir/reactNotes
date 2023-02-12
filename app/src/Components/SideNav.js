@@ -8,7 +8,7 @@ const NoteLink = ({ onSearch, onNavigate, onToggleTheme }) => {
             <SearchInput type="search" onChange={(e) => onSearch(e.target.value)}/>
             <NavButtons>
                 <button onClick={() => onNavigate('/')}><AiFillHome/></button>
-                <button onClick={() => { onToggleTheme(); console.log('test') }}><BsFillSunFill/></button>
+                <button onClick={() => { onToggleTheme(); }}><BsFillSunFill/></button>
             </NavButtons>
         </Navigation>
     )

@@ -16,7 +16,7 @@ const NoteTags = ({ tagsId, onAdd }) => {
   const addTag = (tagId) => {
     onAdd(parseInt(tagId));
     setAllTags((oldAlltags) => {
-        oldAlltags.filter(
+        return oldAlltags.filter(
             (tag) => tag.id !== parseInt(tagId)
         );
     });
@@ -32,7 +32,7 @@ const NoteTags = ({ tagsId, onAdd }) => {
         {tags && tags.map((tag) => <p key={tag.id}>{tag.name}</p>)}
         {allTags && allTags.length > 0 && (
           <div>
-            <select defaultValue={0} onChange={(event) => addTag(event.target.value)}>
+            <select value={0} onChange={(event) => addTag(event.target.value)}>
                 <option value={0} disabled>Add tag</option>
               {allTags.map((tag) => (
                 <option key={tag.id} value={tag.id}>

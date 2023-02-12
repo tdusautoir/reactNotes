@@ -7,6 +7,24 @@ import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai";
 import Modal from "./Modal";
 import Tags from "./NoteTags";
 
+const updateNote = async (note) => {
+  await fetch(`/notes/${note.id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(note),
+  });
+};
+
+const addNote = async (note) => {
+  const response = await fetch("/notes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({...note, tags: []}),
+  });
+
+  return await response.json();
+};
+
 const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
   const { id } = useParams();
   const [note, setNote] = useState(null);
@@ -32,45 +50,26 @@ const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
     } else {
         setIsLoading(false);
     }
-  }, [id]);
+  }, [id, navigate]);
 
   const updateNoteTitle = (event) => {
-    setNote({ ...note, title: event.target.value });
+    setNote((note) => ({ ...note, title: event.target.value }));
   };
 
   const updateNoteContent = (event) => {
-    setNote({ ...note, content: event.target.value });
-  };
-
-  const updateNote = async () => {
-    await fetch(`/notes/${note.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(note),
-    });
-  };
-
-  const addNote = async () => {
-    const response = await fetch("/notes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({...note, tagsId: []}),
-    });
-
-    const newNote = await response.json();
-    onAdd(newNote);
+    setNote((note) => ({ ...note, content: event.target.value }));
   };
 
   const addTag = async (tagId) => {
-    if(!note.tagsId.includes(tagId)) {
+    if(!note.tags.includes(tagId)) {
       const response = await fetch(`/notes/${note.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({...note, tagsId: [...note.tagsId, tagId]}),
+        body: JSON.stringify({...note, tags: [...note.tags, tagId]}),
       });
   
       if(response.status === 200) {
-        setNote({...note, tagsId: [...note.tagsId, tagId]});
+        setNote((note) => ({...note, tags: [...note.tags, tagId]}));
       }
     }
   }
@@ -93,22 +92,22 @@ const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
     const delay = setTimeout(async () => {
       if (note) {
         if (id) {
-          updateNote();
+          updateNote(note);
         } else {
-          addNote();
+          addNote(note).then((note) => onAdd(note));
         }
       }
     }, 1000);
 
     return () => clearTimeout(delay);
-  }, [note]);
+  }, [note, id, onAdd, onChange]);
 
   return (
     <>
       <Form onSubmit={(event) => event.preventDefault()}>
         {!isLoading ? (
           <>
-            { note && note.tagsId && ( <Tags tagsId={note.tagsId} onAdd={addTag} /> )} 
+            { note && note.tags && ( <Tags tagsId={note.tags} onAdd={addTag} /> )} 
             <Title
               placeholder="Type your title here..."
               type="text"
@@ -123,7 +122,7 @@ const Note = ({ onDelete, onChange, onAdd, onPinned }) => {
             {status === 'delete' && <Modal changeStatus={setStatus} onConfirmed={() => onDelete(id)}/>}
             {id && (
               <Buttons>
-                <DeleteButton onClick={() => { onPinned(note); note.pinned ? setNote({...note, pinned: false}) : setNote({...note, pinned: true}) }}>
+                <DeleteButton onClick={() => { onPinned(note); note.pinned ? setNote((note) => ({...note, pinned: false})) : setNote((note) => ({...note, pinned: true})) }}>
                   {note ? !note.pinned ? ( <AiOutlinePushpin /> ) : ( <AiFillPushpin /> ) : null}
                 </DeleteButton>
                 <DeleteButton onClick={() => setStatus("delete")}>
